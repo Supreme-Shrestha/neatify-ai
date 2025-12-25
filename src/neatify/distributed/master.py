@@ -36,18 +36,13 @@ class DistributedPopulation(Population):
             time.sleep(0.5)
     
     def run_generation(self, fitness_function: Callable):
+        """Execute one generation using distributed fitness evaluation."""
+        # Perform distributed fitness evaluation (sets genome.fitness values)
         self._distributed_fitness_evaluation(fitness_function)
-        # Call base class reproduction logic via a simplified path
-        # Note: We need to update species metrics first
-        for s in self.species:
-            s.calculate_average_fitness()
         
-        # Super run_generation does its own evaluation, so we can't call it directly
-        # Instead, we reproduce manually or override more carefully.
-        # For simplicity, let's assume we want to use the base class reproduction logic.
-        # But Population.run_generation calls fitness_function(self.genomes).
-        # We already did evaluation. So we can pass a dummy.
-        super().run_generation(lambda g: None)
+        # Call parent's run_generation with a no-op fitness function
+        # since we've already evaluated fitness distributedly
+        super().run_generation(lambda genomes: None)
 
     def _distributed_fitness_evaluation(self, fitness_function: Callable):
         genome_packages = [
@@ -66,10 +61,7 @@ class DistributedPopulation(Population):
             
         results = self.coordinator.distribute_and_collect(batches)
         fitness_map = {r.genome_id: r.fitness_score for r in results}
-        print(f"[Master] Fitness map keys: {list(fitness_map.keys())}")
-        print(f"[Master] Fitness map values: {list(fitness_map.values())}")
         for genome in self.genomes:
-            print(f"[Master] Updating genome {genome.id} (Type: {type(genome.id)})")
             genome.fitness = fitness_map.get(genome.id, 0.0)
     
     def shutdown(self):
