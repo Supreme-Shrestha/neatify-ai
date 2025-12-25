@@ -4,6 +4,16 @@ This guide covers everything you need to know about running **NEATify** in a dis
 
 ---
 
+## 🛠️ Prerequisites
+
+Before starting, ensure you have **neatify-ai** installed on all nodes (Master and Workers):
+
+```bash
+pip install neatify-ai
+```
+
+---
+
 ## 📑 Table of Contents
 1. [Architecture Overview](#-architecture-overview)
 2. [Configuration: DistributedConfig](#-configuration-distributedconfig)

@@ -4,6 +4,16 @@ Welcome to the comprehensive guide for **NEATify**. This document will take you 
 
 ---
 
+## 🛠️ Installation
+
+To get started, install the library via pip:
+
+```bash
+pip install neatify-ai
+```
+
+---
+
 ## 📑 Table of Contents
 1. [What is NEATify?](#-what-is-neatify)
 2. [Basic Concepts](#-basic-concepts)

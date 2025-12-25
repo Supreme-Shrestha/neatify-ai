@@ -30,7 +30,7 @@ try:
 except ImportError:
     _DISTRIBUTED_AVAILABLE = False
 
-__version__ = "1.0.0"
+__version__ = "0.1.0"
 __all__ = [
     'Genome', 'NodeGene', 'ConnectionGene', 'NodeType', 'ActivationType',
     'EvolutionConfig', 'mutate_weight', 'mutate_add_connection', 'mutate_add_node', 'mutate_activation', 'crossover',

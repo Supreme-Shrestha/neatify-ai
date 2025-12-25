@@ -31,8 +31,9 @@ A modern, production-ready implementation of NEAT (NeuroEvolution of Augmenting 
 ## Installation
 
 ```bash
-pip install torch numpy matplotlib networkx gymnasium
+pip install neatify-ai
 ```
+
 
 ## Quick Start
 
@@ -67,7 +68,7 @@ for generation in range(100):
 
 ### XOR Problem
 ```bash
-python examples/xor_simple.py
+python examples/xor_solve.py
 ```
 
 ### LunarLander-v2
@@ -209,20 +210,20 @@ python tests/test_checkpoint.py
 ## Architecture
 
 ```
-neatify/
+src/neatify/
 ├── core.py              # Genome, NodeGene, ConnectionGene
 ├── evolution.py         # Mutation operators, crossover, config
 ├── population.py        # Population management, speciation
 ├── pytorch_adapter.py   # PyTorch integration
 ├── checkpoint.py        # Save/load utilities
-└── visualization.py     # Plotting functions
+├── visualization.py     # Plotting functions
+└── distributed/         # Distributed NEAT components
 
 examples/
-├── xor_simple.py        # Basic XOR solver
+├── xor_solve.py         # Basic XOR solver
+├── distributed_xor_*.py # Distributed XOR examples
 ├── lunarlander_solve.py # Continuous control
-├── function_approx.py   # Regression tasks
-├── visualization_demo.py
-└── hyperparam_search.py
+└── ...
 
 tests/
 ├── test_*.py            # Unit tests
@@ -246,11 +247,12 @@ tests/
 If you use NEATify in your research, please cite:
 
 ```bibtex
-@software{neatify2024,
-  title = {NEATify: Modern NEAT Implementation with PyTorch},
-  year = {2024},
-  url = {https://github.com/yourusername/neatify}
+@software{neatify_ai_2025,
+  title = {neatify-ai: Modern NEAT Implementation with PyTorch},
+  year = {2025},
+  url = {https://github.com/Supreme-Shrestha/neatify-ai}
 }
+
 ```
 
 ## License
