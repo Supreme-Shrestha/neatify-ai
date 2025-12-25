@@ -1,0 +1,21 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Environments
+venv/
+build_env/
+.env
+
+# Project specific
+checkpoint.pkl
+checkpoint_final.pkl
+*.png
+*.log
