@@ -107,6 +107,7 @@ class Population:
         self.genomes = []
         self.generation = 0
         self.species_id_counter = 0
+        self.genome_id_counter = pop_size - 1 # Track max assigned ID
         
         # Initialize population with minimal linear connections
         for i in range(pop_size):
@@ -124,6 +125,10 @@ class Population:
             self.genomes.append(g)
             
         self.speciate()
+
+    def get_new_genome_id(self):
+        self.genome_id_counter += 1
+        return self.genome_id_counter
 
     def speciate(self):
         """
@@ -187,7 +192,11 @@ class Population:
         self.genomes.sort(key=lambda g: g.fitness, reverse=True)
         elites = self.genomes[:self.config.elitism_count]
         for elite in elites:
-            new_genomes.append(elite.copy())
+            new_genomes.append(elite.copy()) # copy() keeps ID, which is fine for elitism? 
+            # Actually, if we keep ID, we might have collision if same ID is resurrected.
+            # But usually elitism implies the EXACT SAME GENOME survives.
+            # However, if we mix generations, ID uniqueness is good practice.
+            # For simplicity, let's keep elite IDs as is, they are the "same" individual.
         
         if total_avg_fitness == 0:
             # Guard against dead populations
@@ -222,6 +231,7 @@ class Population:
                     parent2 = random.choice(survivors)
                     
                 child = crossover(parent1, parent2, self.config)
+                child.id = self.get_new_genome_id() # Assign unique ID
                 
                 # Topological Mutations
                 if random.random() < self.config.prob_add_node:
@@ -243,6 +253,7 @@ class Population:
             if not s.members: continue
             parent1 = random.choice(s.members)
             child = parent1.copy()
+            child.id = self.get_new_genome_id() # Assign unique ID
             mutate_weight(child, self.config) # Just mutate
             mutate_activation(child, self.config)
             new_genomes.append(child)
