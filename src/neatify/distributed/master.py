@@ -66,7 +66,10 @@ class DistributedPopulation(Population):
             
         results = self.coordinator.distribute_and_collect(batches)
         fitness_map = {r.genome_id: r.fitness_score for r in results}
+        print(f"[Master] Fitness map keys: {list(fitness_map.keys())}")
+        print(f"[Master] Fitness map values: {list(fitness_map.values())}")
         for genome in self.genomes:
+            print(f"[Master] Updating genome {genome.id} (Type: {type(genome.id)})")
             genome.fitness = fitness_map.get(genome.id, 0.0)
     
     def shutdown(self):
@@ -123,11 +126,19 @@ class SystemCoordinator:
     def _handle_batch(self, worker_id, batch, all_results):
         try:
             conn = self.workers[worker_id]['conn']
+            logging.debug(f"Sending batch {batch.batch_id} to worker {worker_id} (size: {len(batch.genomes)})")
             send_message(conn, MessageType.TASK_ASSIGNMENT, batch)
+            
             msg_type, data = receive_message(conn)
             if msg_type == MessageType.FITNESS_REPORT:
+                logging.debug(f"Received fitness report for batch {batch.batch_id}")
                 with self.lock: all_results.extend(data['results'])
-        except: pass
+            else:
+                logging.warning(f"Unexpected message from worker {worker_id}: {msg_type}")
+        except Exception as e:
+            logging.error(f"Error handling batch for worker {worker_id}: {e}")
+            import traceback
+            traceback.print_exc()
         
     def shutdown_workers(self):
         with self.lock:
@@ -137,4 +148,5 @@ class SystemCoordinator:
                 
     def stop_server(self):
         self.running = False
-        self.server_socket.close()
+        if hasattr(self, 'server_socket'):
+            self.server_socket.close()
